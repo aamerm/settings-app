@@ -372,6 +372,7 @@ const settingsKeyMapping = {
         validators: ['url_array'],
     },
     keyMapzenSearchApiKey: { label: 'mapzen_search_api_key' },
+    keyGoogleMapsApiKey: { label: 'google_maps_api_key' },
     /* ============================================================================================================ */
     /* Category: Approval                                                                                           */
     /* ============================================================================================================ */
@@ -419,7 +420,7 @@ const settingsKeyMapping = {
         },
     },
     /* ============================================================================================================ */
-    /* Category: Synchronization                                                                                           */
+    /* Category: Synchronization                                                                                    */
     /* ============================================================================================================ */
     keyRemoteInstanceUrl: {
         label: 'remote_server_url',
@@ -433,7 +434,7 @@ const settingsKeyMapping = {
         type: 'password',
     },
     keyMetadataDataVersioning: {
-        label: 'KeyMetaDataVersioning',
+        label: 'keyVersionEnabled',
         type: 'metadataSettings',
     },
     keyVersionEnabled: {
