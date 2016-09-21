@@ -232,17 +232,15 @@ class SettingsFields extends React.Component {
                         props: {
                             label: fieldBase.props.floatingLabelText,
                             onClick: () => {
-                                const qry = mapping.query_type === 'DELETE' ?
-                                    d2.Api.getApi().delete(mapping.uri) :
-                                    d2.Api.getApi().post(mapping.uri);
-                                qry.then(result => {
-                                    log.info(result && result.message || 'Ok');
-                                    settingsActions.load(true);
-                                    settingsActions.showSnackbarMessage(result.message);
-                                }).catch(error => {
-                                    log.error(error.message);
-                                    settingsActions.showSnackbarMessage(error.message);
-                                });
+                                d2.Api.getApi().post(mapping.uri)
+                                    .then(result => {
+                                        log.info(result && result.message || 'Ok');
+                                        settingsActions.load(true);
+                                        settingsActions.showSnackbarMessage(result.message);
+                                    }).catch(error => {
+                                        log.warn('Error when performing API query:', error.message);
+                                        settingsActions.showSnackbarMessage(error.message);
+                                    });
                             },
                             style: { minWidth: 'initial', maxWidth: 'initial', marginTop: '1em' },
                         },
@@ -268,7 +266,8 @@ class SettingsFields extends React.Component {
                 const mapping = settingsKeyMapping[field.name];
 
                 if (mapping.userSettingsOverride) {
-                    const userSettingValue = d2.currentUser.userSettingsNoFallback[field.name] !== null
+                    const userSettingsNoFallback = configOptionStore.getState().userSettingsNoFallback;
+                    const userSettingValue = userSettingsNoFallback && userSettingsNoFallback[field.name] !== null
                         ? d2.currentUser.userSettingsNoFallback[field.name]
                         : '';
                     let component = field.component;

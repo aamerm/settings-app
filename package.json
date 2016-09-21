@@ -1,6 +1,6 @@
 {
   "name": "settings-app",
-  "version": "25.0.0",
+  "version": "25.0.4",
   "description": "Settings management application for DHIS2",
   "main": "index.html",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "d2-manifest package.json manifest.webapp && webpack-dev-server",
     "prebuild": "rm -rf build",
     "build": "webpack",
-    "postbuild": "cp -r index.html *.png i18n node_modules/jquery/dist/jquery.min.js build/ && npm run manifest",
+    "postbuild": "cp -r index.html *.png i18n build/ && npm run manifest",
     "manifest": "d2-manifest package.json build/manifest.webapp"
   },
   "repository": {
@@ -27,9 +27,7 @@
     "url": "https://github.com/dhis2/settings-app/issues"
   },
   "homepage": "https://github.com/dhis2/settings-app#readme",
-  "dependencies": {
-    "jquery": "^2.2.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.6.4",
     "babel-eslint": "^6.0.0-beta.1",
@@ -40,14 +38,15 @@
     "babel-preset-stage-0": "^6.5.0",
     "classnames": "^2.2.3",
     "css-loader": "^0.23.0",
-    "d2": "^24.0.1",
+    "d2": "^25.0.11",
     "d2-manifest": "^1.0.0",
-    "d2-ui": "^24.0.3",
+    "d2-ui": "~25.0.2",
     "d2-utilizr": "^0.2.4",
     "eslint": "^2.2.0",
     "eslint-config-dhis2": "^2.0.0",
     "eslint-plugin-react": "^4.0.0",
     "fbjs": "^0.7.2",
+    "fixed-data-table": "~0.6.0",
     "http-proxy": "git+https://github.com/nicolayr/node-http-proxy.git",
     "lodash.isfinite": "^3.3.0",
     "loglevel": "1.4.0",
@@ -63,8 +62,7 @@
     "style-loader": "^0.13.0",
     "susy": "^2.2.6",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0",
-    "fixed-data-table": "~0.6.0"
+    "webpack-dev-server": "1.14.x"
   },
   "pre-commit": [
     "validate"

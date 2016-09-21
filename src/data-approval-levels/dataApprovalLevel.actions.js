@@ -14,7 +14,7 @@ const actions = Action.createActionsFromNames([
 ]);
 
 function checkImportReport(response) {
-    if (response.response && response.response.importCount && response.response.importCount.imported === 1) {
+    if (response.status === 'OK') {
         return Promise.resolve(response);
     }
     return Promise.reject(response);
@@ -35,10 +35,10 @@ actions.loadDataApprovalLevels
     });
 
 actions.saveDataApprovalLevel
-    .subscribe(({ data: dataApprovalLevel, complete, error }) => {
+    .subscribe(({ data: dataApprovalLevel, complete: actionComplete, error: actionFailed }) => {
         const dataApprovalLevels = dataApprovalLevelStore.getState();
         if (!dataApprovalLevel.organisationUnitLevel) {
-            error();
+            actionFailed();
             getD2().then(d2 => {
                 settingsActions.showSnackbarMessage(d2.i18n.getTranslation('oranisation_unit_level_is_required'));
             });
@@ -68,20 +68,15 @@ actions.saveDataApprovalLevel
                     workflowActions.loadDataApprovalWorkflows();
                     settingsActions.showSnackbarMessage(d2.i18n.getTranslation('approval_level_saved'));
                     actions.loadDataApprovalLevels();
-                    complete(message);
+                    actionComplete(message);
                 })
-                .catch(errorResponse => {
-                    if (errorResponse.response && errorResponse.response.importConflicts) {
-                        log.error(errorResponse.response.importConflicts);
-                        settingsActions.showSnackbarMessage(`${
-                            d2.i18n.getTranslation('failed_to_save_approval_level')}: ${
-                            errorResponse.response.importConflicts[0].value}`);
-                        error(errorResponse.response.importConflicts);
-                        return;
-                    }
-                    log.error(errorResponse);
+                .catch(error => {
+                    const message = (error.messages || error.response && error.response.errorReports)
+                        ? `\n - ${(error.messages || error.response.errorReports).map(e => e.message).join('\n - ')}`
+                        : error.message || error;
+                    log.warn(`Error when saving approval level: ${message}`);
                     settingsActions.showSnackbarMessage(d2.i18n.getTranslation('failed_to_save_approval_level'));
-                    error(errorResponse);
+                    actionFailed();
                 });
         });
     });
@@ -97,7 +92,7 @@ actions.deleteDataApprovalLevel.subscribe(({ data: dataApprovalLevel, complete }
             });
         })
         .catch(e => {
-            log.error(e.message);
+            log.warn('Error when deleting approval level:', e.message);
             getD2().then(d2 => {
                 settingsActions.showSnackbarMessage(d2.i18n.getTranslation('failed_to_delete_approval_level'));
             });

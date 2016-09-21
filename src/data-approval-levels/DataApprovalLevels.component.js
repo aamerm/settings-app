@@ -189,8 +189,7 @@ export default React.createClass({
                 () => {
                     this.setState({ saving: false, showForm: false });
                 },
-                (err) => {
-                    log.error('Failed to save workflow:', err);
+                () => {
                     this.setState({ saving: false });
                 }
             );
